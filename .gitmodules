@@ -1,0 +1,3 @@
+[submodule "pylib/LPD8806"]
+	path = pylib/LPD8806
+	url = git@github.com:squeed/RPi-LPD8806.git
