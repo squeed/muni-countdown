@@ -25,20 +25,11 @@ def do_command(cmd, **args):
 	
 
 
-def get_interval(stopId):
+def get_interval(stopId = STOP):
 	d = do_command('predictions', stopId= stopId)
 
-	#f = open('stop.xml')
-	#d = xml.etree.ElementTree.parse(f)
 	d = d.find('predictions')
 	d = d.find('direction')
 	d = d.find('prediction')
-	return d.get('seconds')
+	return int(d.get('seconds'))
 
-
-
-
-
-#do_command('routeConfig', r='J')
-
-print(get_interval(STOP))

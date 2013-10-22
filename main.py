@@ -1,19 +1,19 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 sys.path.append("pylib")
 
+import time
 
 #set up library
 import municountdown.poller
 import municountdown.writer
 
-from LPD8806 import LPD8806
-
 
 def main():
-	p = municountdown.poller.Poller()
+	p = municountdown.poller.Poller( False)
 	p.start()
+	time.sleep(5)
 
 
 	w = municountdown.writer.Writer(p)

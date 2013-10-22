@@ -24,9 +24,12 @@ def do_command(cmd, **args):
 def get_bsa():
 	d = do_command('bsa')
 
-	if d.find('bsa'):
-		print("Delay found...")
+	if d.find('bsa') is not None:
+		print("BART Delay found...")
 		return True
 	else:
-		print("No Delay!")
+		print("No BART Delay!")
 		return False
+
+if __name__ == '__main__':
+	get_bsa()	
