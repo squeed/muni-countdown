@@ -1,12 +1,16 @@
 #
 # Handle writing to the actual sign
+import sys
 import threading
 import time
 
 import LPD8806.LPD8806 as LPD8806
 
-TIMERLEN = 12
+TIMERLEN = 16 
 STRIPLEN = TIMERLEN+4 # countdown timer + delay presence
+RED = LPD8806.Color(200,50,50)
+GREEN = LPD8806.Color(50, 200, 50)
+YELLOW = LPD8806.Color(255, 150, 0)
 
 class Writer(threading.Thread):
 	
@@ -29,20 +33,21 @@ class Writer(threading.Thread):
 
 	"""
 	def timer_colors(self, minutes):
-		red_c = LPD8806.Color(200,50,50)
-		green_c = LPD8806.Color(50, 200, 50)
-		yell_c = LPD8806.Color(255, 150, 0)
-
-		if minutes >= TIMERLEN:
+		
+		if minutes > TIMERLEN:
 			minutes = TIMERLEN
-		out = list()
+
+		if minutes < 0:
+			return list();
+		out = [LPD8806.Color(0, 0, 0)] * TIMERLEN
+
 		for i in range(minutes):
 			if i < 3:
-				out.append(red_c)
+				out[i] = RED
 			elif i < 8:
-				out.append(green_c)
+				out[i] = GREEN
 			else:
-				out.append(yell_c)
+				out[i] = YELLOW
 
 		return out
 
@@ -59,14 +64,16 @@ class Writer(threading.Thread):
 		if minutes > 0:
 			self.strip.fillOff()
 		
-			self.strip[0:minutes] = self.timer_colors(minutes)
+			self.strip[0:TIMERLEN] = self.timer_colors(minutes)
 
 			if self.poller.bart_delay:
-				self.strip[-1] = LPD8806.Color(255, 0, 0)
+				self.strip[-3] =  RED
+			else:
+				self.strip[-3] =  GREEN
 
 			self.strip.update()
 
-		print("There are {0} seconds {1} minutes 'till j. {2}".format(seconds, minutes, bartstr))
+		sys.stderr.write("There are {0} seconds {1} minutes 'till j. {2}\n".format(seconds, minutes, bartstr))
 
 
 
