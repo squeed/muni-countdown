@@ -34,10 +34,18 @@ class Poller(threading.Thread):
 		if self.fakemode:
 			self.muni_at = int(time.time() + 60 * 11)
 			self.bart_delay = True
-			self.muni_delay = False
+			self.muni_delay = 0 
 			return;
 
-		countdown = muni.get_interval()
-		self.muni_at = int(time.time()) + int(countdown)
-		self.bart_delay = bart.get_bsa()
+		try:
+			(countdown, self.muni_delay) = muni.get_interval()
+			self.muni_at = int(time.time()) + int(countdown)
+		except Exception as e:
+			print("Error polling muni")
+			print(e)
+		try:
+			self.bart_delay = bart.get_bsa()
+		except Exception as e:
+			print("Error polling bart")
+			print(e)
 
